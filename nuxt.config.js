@@ -30,7 +30,8 @@ export default {
 
   // Server middleware untuk API proxy
   serverMiddleware: [
-    '~/serverMiddleware/api-history.js'
+    '~/serverMiddleware/api-history.js',
+    '~/serverMiddleware/api-latest.js'
   ],
 
   // Build configuration

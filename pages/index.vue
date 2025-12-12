@@ -260,8 +260,8 @@ export default {
     async fetchSummaryData() {
       this.loadingSummary = true
       try {
-        // Fetch real-time data from latest.json API
-        const apiUrl = 'https://rancangrinakit.online/kingkin/api/data/latest.json'
+        // Fetch real-time data from latest.json API via proxy
+        const apiUrl = '/api/latest'
         const response = await fetch(apiUrl, {
           method: 'GET',
           headers: {
