@@ -223,11 +223,14 @@ export default {
         }
       ],
       lastUpdate: new Date(),
-      userTimeZone: ''
+      userTimeZone: '',
+      initialBalance: 12096.00,
+      loadingSummary: false
     }
   },
   mounted() {
     this.detectTimeZone()
+    this.fetchSummaryData()
   },
   computed: {
     onlineAccounts() {
@@ -250,9 +253,58 @@ export default {
         second: '2-digit'
       })
     },
-    refreshData() {
+    async refreshData() {
       this.lastUpdate = new Date()
-      // Refresh logic here
+      await this.fetchSummaryData()
+    },
+    async fetchSummaryData() {
+      this.loadingSummary = true
+      try {
+        const accountNumber = '263221138'
+        const queryParams = new URLSearchParams({
+          uuid: accountNumber,
+          limit: '10000' // Get all trades for accurate calculation
+        })
+        
+        const apiUrl = `/api/history?${queryParams}`
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        })
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const result = await response.json()
+        
+        if (result.status === 'success' && result.data && result.data.length > 0) {
+          // Calculate total profit from all trades
+          const calculatedTotalProfit = result.data.reduce((sum, trade) => {
+            return sum + parseFloat(trade.profit || 0)
+          }, 0)
+          
+          // Calculate total equity = initial balance + total profit
+          const calculatedTotalEquity = this.initialBalance + calculatedTotalProfit
+          
+          // Update data
+          this.totalProfit = calculatedTotalProfit
+          this.summary.total_profit = calculatedTotalProfit
+          this.summary.total_equity = calculatedTotalEquity
+          this.summary.total_balance = this.initialBalance
+          
+          // Update last update time
+          this.lastUpdate = new Date()
+        }
+      } catch (error) {
+        // Silent error - keep existing values if API fails
+        console.error('Failed to fetch summary data:', error)
+      } finally {
+        this.loadingSummary = false
+      }
     },
     scrollToAccounts() {
       // Scroll to chart section
