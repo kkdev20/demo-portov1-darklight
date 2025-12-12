@@ -260,9 +260,11 @@ export default {
     async fetchSummaryData() {
       this.loadingSummary = true
       try {
-        // Try API endpoint (works in both dev with serverMiddleware and production with Vercel function)
-        let apiUrl = '/api/latest'
-        let response = await fetch(apiUrl, {
+        const accountNumber = '263221138'
+        
+        // Fetch Total Equity and Balance from latest.json
+        let equityApiUrl = '/api/latest'
+        let equityResponse = await fetch(equityApiUrl, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -271,11 +273,11 @@ export default {
         })
         
         // Check if response is valid JSON (not HTML)
-        const contentType = response.headers.get('content-type')
+        const contentType = equityResponse.headers.get('content-type')
         if (!contentType || !contentType.includes('application/json')) {
-          // Proxy not working, try direct API (might fail due to CORS, but worth trying)
-          apiUrl = 'https://rancangrinakit.online/kingkin/api/data/latest.json'
-          response = await fetch(apiUrl, {
+          // Proxy not working, try direct API
+          equityApiUrl = 'https://rancangrinakit.online/kingkin/api/data/latest.json'
+          equityResponse = await fetch(equityApiUrl, {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
@@ -284,33 +286,50 @@ export default {
           })
         }
         
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+        if (equityResponse.ok) {
+          const equityText = await equityResponse.text()
+          try {
+            const equityResult = JSON.parse(equityText)
+            if (equityResult && equityResult[accountNumber]) {
+              const accountData = equityResult[accountNumber]
+              this.summary.total_equity = parseFloat(accountData.equity || 0)
+              this.summary.total_balance = parseFloat(accountData.balance || 0)
+            }
+          } catch (e) {
+            // Skip if not JSON
+          }
         }
         
-        const text = await response.text()
-        let result
-        try {
-          result = JSON.parse(text)
-        } catch (e) {
-          // If not JSON, it's probably HTML from Nuxt - skip
-          return
+        // Fetch Total Profit from history transaksi API (sum all profits)
+        const historyApiUrl = `/api/history?uuid=${accountNumber}&limit=10000`
+        const historyResponse = await fetch(historyApiUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        })
+        
+        if (historyResponse.ok) {
+          const historyText = await historyResponse.text()
+          try {
+            const historyResult = JSON.parse(historyText)
+            if (historyResult.status === 'success' && historyResult.data && Array.isArray(historyResult.data)) {
+              // Calculate total profit from all trades
+              const calculatedTotalProfit = historyResult.data.reduce((sum, trade) => {
+                return sum + parseFloat(trade.profit || 0)
+              }, 0)
+              
+              this.totalProfit = calculatedTotalProfit
+              this.summary.total_profit = calculatedTotalProfit
+            }
+          } catch (e) {
+            // Skip if not JSON
+          }
         }
         
-        const accountNumber = '263221138'
-        
-        if (result && result[accountNumber]) {
-          const accountData = result[accountNumber]
-          
-          // Update from real-time API data
-          this.summary.total_equity = parseFloat(accountData.equity || 0)
-          this.summary.total_balance = parseFloat(accountData.balance || 0)
-          this.totalProfit = parseFloat(accountData.profit || 0)
-          this.summary.total_profit = parseFloat(accountData.profit || 0)
-          
-          // Update last update time
-          this.lastUpdate = new Date()
-        }
+        // Update last update time
+        this.lastUpdate = new Date()
       } catch (error) {
         // Silent error - keep existing values if API fails
       } finally {
