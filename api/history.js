@@ -14,9 +14,14 @@ module.exports = async (req, res) => {
 
   try {
     const axios = require('axios')
-    // Get query string from request
-    const queryString = req.url.includes('?') ? req.url.split('?')[1] : ''
-    const apiUrl = `http://rancangrinakit.online/kingkin/api-historytransaksi-uuid.php?${queryString}`
+    // Get query string from request - Vercel passes query in req.query
+    let queryString = ''
+    if (req.query && Object.keys(req.query).length > 0) {
+      queryString = new URLSearchParams(req.query).toString()
+    } else if (req.url && req.url.includes('?')) {
+      queryString = req.url.split('?')[1]
+    }
+    const apiUrl = `http://rancangrinakit.online/kingkin/api-historytransaksi-uuid.php${queryString ? '?' + queryString : ''}`
     
     const response = await axios.get(apiUrl, {
       headers: {
