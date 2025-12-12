@@ -228,9 +228,9 @@ export default {
       loadingSummary: false
     }
   },
-  mounted() {
+  async mounted() {
     this.detectTimeZone()
-    this.fetchSummaryData()
+    await this.fetchSummaryData()
   },
   computed: {
     onlineAccounts() {
