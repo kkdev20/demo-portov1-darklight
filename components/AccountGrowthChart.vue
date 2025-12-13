@@ -262,6 +262,24 @@ export default {
       
       const cumulativeData = this.chartData.map(d => d.cumulative)
       
+      // Create gradient for border (line) - Vertical gradient (top to bottom)
+      const borderGradient = ctx.createLinearGradient(0, 0, 0, 300)
+      borderGradient.addColorStop(0, '#3b82f6')      // Blue
+      borderGradient.addColorStop(0.2, '#06b6d4')    // Cyan
+      borderGradient.addColorStop(0.4, '#10b981')     // Emerald
+      borderGradient.addColorStop(0.6, '#8b5cf6')     // Purple
+      borderGradient.addColorStop(0.8, '#ec4899')    // Pink
+      borderGradient.addColorStop(1, '#f59e0b')       // Amber
+      
+      // Create gradient for fill area - Vertical gradient (top to bottom)
+      const fillGradient = ctx.createLinearGradient(0, 0, 0, 300)
+      fillGradient.addColorStop(0, 'rgba(59, 130, 246, 0.35)')     // Blue
+      fillGradient.addColorStop(0.2, 'rgba(6, 182, 212, 0.3)')    // Cyan
+      fillGradient.addColorStop(0.4, 'rgba(16, 185, 129, 0.25)')  // Emerald
+      fillGradient.addColorStop(0.6, 'rgba(139, 92, 246, 0.3)')    // Purple
+      fillGradient.addColorStop(0.8, 'rgba(236, 72, 153, 0.2)')    // Pink
+      fillGradient.addColorStop(1, 'rgba(245, 158, 11, 0.15)')    // Amber
+      
       this.chart = new this.Chart(ctx, {
         type: 'line',
         data: {
@@ -270,16 +288,19 @@ export default {
             {
               label: 'Cumulative Profit',
               data: cumulativeData,
-              borderColor: '#6366f1',
-              backgroundColor: 'rgba(99, 102, 241, 0.1)',
-              borderWidth: 2,
+              borderColor: borderGradient,
+              backgroundColor: fillGradient,
+              borderWidth: 3,
               fill: true,
               tension: 0.4,
-              pointRadius: 3,
-              pointHoverRadius: 5,
-              pointBackgroundColor: '#6366f1',
-              pointBorderColor: '#fff',
-              pointBorderWidth: 2
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#fff',
+              pointBorderColor: borderGradient,
+              pointBorderWidth: 2,
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: '#3b82f6',
+              pointHoverBorderWidth: 3
             }
           ]
         },
