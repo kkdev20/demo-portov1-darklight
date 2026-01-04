@@ -209,7 +209,7 @@
 
       <!-- Account Growth Chart -->
       <div id="dashboard-chart">
-        <AccountGrowthChart :equity="summary.total_equity" />
+        <AccountGrowthChart :equity="summary.total_equity" :is-dark-mode="isDarkMode" />
       </div>
     </div>
   </div>

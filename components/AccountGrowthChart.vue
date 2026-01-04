@@ -81,6 +81,20 @@ export default {
     equity: {
       type: Number,
       default: 0
+    },
+    isDarkMode: {
+      type: Boolean,
+      default: false
+    }
+  },
+  watch: {
+    isDarkMode() {
+      // Re-render chart when dark mode changes
+      if (this.chartData.length > 0 && this.Chart) {
+        this.$nextTick(() => {
+          this.renderChart()
+        })
+      }
     }
   },
   data() {
@@ -364,7 +378,7 @@ export default {
             },
             y: {
               grid: {
-                color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+                color: this.isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
               },
               ticks: {
                 callback: (value) => {
