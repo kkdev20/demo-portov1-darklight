@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-gray-50 min-h-screen">
+  <div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
+    <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
       <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
         <div class="flex justify-between h-14 items-center">
           <!-- Logo Section -->
@@ -11,12 +11,20 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
               </svg>
             </div>
-            <span class="header-logo-text ml-1 sm:ml-2 font-bold text-gray-900">Portfolio Analytics</span>
+            <span class="header-logo-text ml-1 sm:ml-2 font-bold text-gray-900 dark:text-white">Portfolio Analytics</span>
           </div>
           
           <!-- Right Section -->
           <div class="flex items-center space-x-1 sm:space-x-2 lg:space-x-3">
-            <button @click="refreshData" class="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1.5 border border-gray-300 shadow-sm text-xs sm:text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 whitespace-nowrap">
+            <button @click="toggleDarkMode" class="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-xs sm:text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 whitespace-nowrap">
+              <svg v-if="!isDarkMode" class="h-3 w-3 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+              </svg>
+              <svg v-else class="h-3 w-3 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            </button>
+            <button @click="refreshData" class="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-xs sm:text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 whitespace-nowrap">
               <svg class="-ml-0.5 mr-1 h-2.5 w-2.5 sm:h-3 sm:w-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
               </svg> 
@@ -27,18 +35,18 @@
               <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 mr-1 rounded-full bg-green-500 animate-pulse"></span>
               Live
             </span>
-            <div class="text-gray-500">
+            <div class="text-gray-500 dark:text-gray-400">
               <!-- Mobile: Compact -->
               <div class="sm:hidden flex items-center space-x-1 text-[10px]">
                 <span class="font-medium">{{ formatTime(lastUpdate) }}</span>
-                <span class="text-gray-400">•</span>
+                <span class="text-gray-400 dark:text-gray-500">•</span>
                 <span>{{ userTimeZone }}</span>
               </div>
               
               <!-- Desktop: Full -->
               <div class="hidden sm:flex items-center space-x-1 lg:space-x-2 text-xs">
                 <span class="whitespace-nowrap">Last: <span class="font-medium">{{ formatTime(lastUpdate) }}</span></span>
-                <span class="text-gray-400">•</span>
+                <span class="text-gray-400 dark:text-gray-500">•</span>
                 <span class="whitespace-nowrap">{{ userTimeZone }}</span>
               </div>
             </div>
@@ -119,13 +127,13 @@
       <!-- Stats Grid -->
       <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mb-4">
         <!-- Total Equity -->
-        <div class="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 p-2.5 sm:p-3">
+        <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-2.5 sm:p-3">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs font-medium text-gray-600">Total Equity</p>
-              <p v-if="loadingSummary && summary.total_equity === 0" class="text-lg sm:text-xl font-bold text-gray-400 mt-1">Loading...</p>
-              <p v-else class="text-lg sm:text-xl font-bold text-gray-900 mt-1">${{ formatNumber(summary.total_equity) }}</p>
-              <p class="text-[10px] sm:text-xs text-gray-600 mt-1">Auto-update every 3 hours</p>
+              <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Total Equity</p>
+              <p v-if="loadingSummary && summary.total_equity === 0" class="text-lg sm:text-xl font-bold text-gray-400 dark:text-gray-500 mt-1">Loading...</p>
+              <p v-else class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mt-1">${{ formatNumber(summary.total_equity) }}</p>
+              <p class="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 mt-1">Auto-update every 3 hours</p>
             </div>
             <div class="h-8 w-8 sm:h-9 sm:w-9 rounded-lg gradient-primary flex items-center justify-center">
               <svg class="h-3 w-3 sm:h-4 sm:w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,13 +144,13 @@
         </div>
 
         <!-- Total Profit -->
-        <div class="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 p-2.5 sm:p-3">
+        <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-2.5 sm:p-3">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs font-medium text-gray-600">Total Profit</p>
-              <p v-if="loadingSummary && totalProfit === 0" class="text-lg sm:text-xl font-bold text-gray-400 mt-1">Loading...</p>
-              <p v-else class="text-lg sm:text-xl font-bold mt-1" :class="totalProfit >= 0 ? 'text-green-600' : 'text-red-600'">${{ formatNumber(totalProfit) }}</p>
-              <p class="text-[10px] sm:text-xs text-gray-600 mt-1">Auto-update every 3 hours</p>
+              <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Total Profit</p>
+              <p v-if="loadingSummary && totalProfit === 0" class="text-lg sm:text-xl font-bold text-gray-400 dark:text-gray-500 mt-1">Loading...</p>
+              <p v-else class="text-lg sm:text-xl font-bold mt-1" :class="totalProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">${{ formatNumber(totalProfit) }}</p>
+              <p class="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 mt-1">Auto-update every 3 hours</p>
             </div>
             <div class="h-8 w-8 sm:h-9 sm:w-9 rounded-lg gradient-success flex items-center justify-center">
               <svg class="h-3 w-3 sm:h-4 sm:w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,19 +161,19 @@
         </div>
 
         <!-- Active Accounts -->
-        <div class="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 p-2.5 sm:p-3">
+        <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-2.5 sm:p-3">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs font-medium text-gray-600">Active Accounts</p>
-              <p class="text-lg sm:text-xl font-bold text-gray-900 mt-1">{{ accounts.length }}</p>
+              <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Active Accounts</p>
+              <p class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mt-1">{{ accounts.length }}</p>
               <div class="flex items-center space-x-2 sm:space-x-3 mt-1">
                 <div class="flex items-center">
                   <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1"></span>
-                  <span class="text-[10px] sm:text-xs text-gray-600">{{ onlineAccounts.length }}</span>
+                  <span class="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400">{{ onlineAccounts.length }}</span>
                 </div>
                 <div class="flex items-center">
-                  <span class="w-1.5 h-1.5 rounded-full bg-gray-300 mr-1"></span>
-                  <span class="text-[10px] sm:text-xs text-gray-600">{{ accounts.length - onlineAccounts.length }}</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-600 mr-1"></span>
+                  <span class="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400">{{ accounts.length - onlineAccounts.length }}</span>
                 </div>
               </div>
             </div>
@@ -178,14 +186,14 @@
         </div>
 
         <!-- Account -->
-        <div class="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 p-2.5 sm:p-3">
+        <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-2.5 sm:p-3">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs font-medium text-gray-600">Account</p>
-              <p class="text-sm font-semibold text-gray-900 mt-1">26322***8</p>
+              <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Account</p>
+              <p class="text-sm font-semibold text-gray-900 dark:text-white mt-1">26322***8</p>
               <div class="flex items-center mt-0.5">
-                <span class="text-[10px] sm:text-xs text-gray-500 mr-2">USC</span>
-                <span class="flex items-center text-[10px] sm:text-xs text-green-600">
+                <span class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mr-2">USC</span>
+                <span class="flex items-center text-[10px] sm:text-xs text-green-600 dark:text-green-400">
                   <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1"></span> Online
                 </span>
               </div>
@@ -228,10 +236,22 @@ export default {
       lastUpdate: new Date(),
       userTimeZone: '',
       initialBalance: 12096.00,
-      loadingSummary: false
+      loadingSummary: false,
+      isDarkMode: false
     }
   },
   async mounted() {
+    // Load dark mode preference from localStorage
+    if (process.client) {
+      const savedTheme = localStorage.getItem('theme')
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        this.isDarkMode = true
+        document.documentElement.classList.add('dark')
+      } else {
+        this.isDarkMode = false
+        document.documentElement.classList.remove('dark')
+      }
+    }
     this.detectTimeZone()
     await this.fetchSummaryData()
   },
@@ -387,6 +407,18 @@ export default {
         const offset = -now.getTimezoneOffset() / 60
         const gmtOffset = offset >= 0 ? `GMT+${offset}` : `GMT${offset}`
         this.userTimeZone = gmtOffset
+      }
+    },
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode
+      if (process.client) {
+        if (this.isDarkMode) {
+          document.documentElement.classList.add('dark')
+          localStorage.setItem('theme', 'dark')
+        } else {
+          document.documentElement.classList.remove('dark')
+          localStorage.setItem('theme', 'light')
+        }
       }
     }
   }

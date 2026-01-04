@@ -1,17 +1,17 @@
 <template>
   <div>
-  <div class="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4 mt-4">
+  <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 sm:p-4 mt-4">
       <!-- Header -->
       <div class="flex items-center justify-between mb-3 sm:mb-4">
       <div>
-        <h3 class="text-lg sm:text-xl font-bold text-gray-900">Account Growth</h3>
-        <p class="text-xs sm:text-sm text-gray-600 mt-1">Growth based on trading results</p>
+        <h3 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Account Growth</h3>
+        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">Growth based on trading results</p>
       </div>
       <div class="flex items-center space-x-2">
         <select 
           v-model="selectedPeriod" 
           @change="fetchGrowthData"
-          class="text-xs sm:text-sm border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           <option value="7">Last 7 days</option>
           <option value="30">Last 30 days</option>
@@ -20,11 +20,11 @@
         </select>
         <button 
           @click="fetchGrowthData"
-          class="p-1.5 sm:p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           :disabled="loading"
         >
           <svg 
-            class="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" 
+            class="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" 
             :class="{ 'animate-spin': loading }"
             fill="none" 
             stroke="currentColor" 
@@ -43,10 +43,10 @@
 
     <!-- Error State -->
     <div v-else-if="error" class="text-center py-8">
-      <p class="text-red-600 text-sm">{{ error }}</p>
+      <p class="text-red-600 dark:text-red-400 text-sm">{{ error }}</p>
       <button 
         @click="fetchGrowthData"
-        class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm"
+        class="mt-4 px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 text-sm"
       >
         Retry
       </button>
@@ -64,12 +64,12 @@
       <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
       </svg>
-      <p class="mt-4 text-sm text-gray-600">No trading data available</p>
+      <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">No trading data available</p>
     </div>
   </div>
   <!-- Watermark -->
   <div class="text-center mt-2">
-    <p class="text-xs text-gray-400 font-medium">wistack.site</p>
+    <p class="text-xs text-gray-400 dark:text-gray-500 font-medium">wistack.site</p>
   </div>
   </div>
 </template>
@@ -358,12 +358,13 @@ export default {
                 minRotation: 45,
                 font: {
                   size: 11
-                }
+                },
+                color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'
               }
             },
             y: {
               grid: {
-                color: 'rgba(0, 0, 0, 0.05)'
+                color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
               },
               ticks: {
                 callback: (value) => {
@@ -371,7 +372,8 @@ export default {
                 },
                 font: {
                   size: 11
-                }
+                },
+                color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'
               }
             }
           },
