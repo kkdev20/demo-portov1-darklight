@@ -373,7 +373,7 @@ export default {
                 font: {
                   size: 11
                 },
-                color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.7)'
+                color: this.isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.7)'
               }
             },
             y: {
@@ -387,7 +387,7 @@ export default {
                 font: {
                   size: 11
                 },
-                color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.7)'
+                color: this.isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.7)'
               }
             }
           },
