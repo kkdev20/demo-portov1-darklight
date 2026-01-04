@@ -77,6 +77,12 @@
 <script>
 export default {
   name: 'AccountGrowthChart',
+  props: {
+    equity: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
       chart: null,
@@ -330,9 +336,13 @@ export default {
                   const value = context.parsed.y
                   const index = context.dataIndex
                   const dayData = this.chartData[index]
+                  const dailyProfitPercent = this.equity > 0 
+                    ? ((dayData.profit / this.equity) * 100).toFixed(2)
+                    : '0.00'
                   return [
                     `Cumulative: $${this.formatNumber(value)}`,
-                    `Daily Profit: $${this.formatNumber(dayData.profit)}`
+                    `Daily Profit: $${this.formatNumber(dayData.profit)}`,
+                    `${dailyProfitPercent >= 0 ? '+' : ''}${dailyProfitPercent}% of equity`
                   ]
                 }
               }

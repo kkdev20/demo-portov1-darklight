@@ -201,7 +201,7 @@
 
       <!-- Account Growth Chart -->
       <div id="dashboard-chart">
-        <AccountGrowthChart />
+        <AccountGrowthChart :equity="summary.total_equity" />
       </div>
     </div>
   </div>
